@@ -43,4 +43,31 @@ public class ProductServlet extends HttpServlet {
             }
         }
     }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        // Get product ID from request parameter
+        String productIdStr = request.getParameter("id");
+        if (productIdStr == null) {
+            out.println("<h1>Product ID is missing!</h1>");
+            return;
+        }
+
+        // Convert product ID to integer
+        int productId = Integer.parseInt(productIdStr);
+
+        // Assuming you have a database connection and ProductDAO class for database operations
+        ProductDAO productDAO = new ProductDAO();
+
+        // Delete the product from the database
+        boolean success = productDAO.deleteProduct(productId);
+
+        if (success) {
+            out.println("<h1>Product deleted successfully!</h1>");
+        } else {
+            out.println("<h1>Error deleting product!</h1>");
+        }
+    }
 }
