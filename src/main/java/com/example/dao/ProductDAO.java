@@ -37,23 +37,5 @@ public class ProductDAO {
             return false;
         }
     }
-
-    public boolean updateProduct(Product product) {
-        String query = "UPDATE product SET name = ?, price = ?, stockAmount = ?, discounts = ?, images = ? WHERE id = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, product.getProductName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setDouble(3, product.getStockAmount());
-            preparedStatement.setDouble(4, product.getDiscounts());
-            preparedStatement.setString(5, product.getImages());
-            preparedStatement.setInt(6, product.getId());
-            int rowsUpdated = preparedStatement.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
 
