@@ -42,6 +42,28 @@ public class ProductServlet extends HttpServlet {
                 out.println("<h1>Error creating product!</h1>");
             }
         }
+
+        protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+
+            // Parse JSON request body
+            ObjectMapper mapper = new ObjectMapper();
+            Product product = mapper.readValue(request.getReader(), Product.class);
+
+            // Assuming you have a database connection and ProductDAO class for database operations
+            ProductDAO productDAO = new ProductDAO();
+
+            // Add the product to the database
+            boolean success = productDAO.updateProduct(product);
+
+            if (success) {
+                out.println("<h1>Product updated successfully!</h1>");
+            } else {
+                out.println("<h1>Error updating product!</h1>");
+            }
+        }
+
     }
 
 }
