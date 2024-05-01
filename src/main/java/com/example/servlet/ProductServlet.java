@@ -91,4 +91,57 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+
+        // Get the requested action (get all products or get product by id)
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            // If no action specified, return all products
+            List<Product> products = ProductDAO.getAllProducts();
+            ObjectMapper mapper = new ObjectMapper();
+            String productsJson = mapper.writeValueAsString(products);
+            out.println(productsJson);
+        } else if (action.equals("getById")) {
+            // If action is 'getById', retrieve product by id
+            String productIdStr = request.getParameter("id");
+            if (productIdStr != null && !productIdStr.isEmpty()) {
+                int productId = Integer.parseInt(productIdStr);
+                Product product = ProductDAO.getProductById(productId);
+                if (product != null) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    String productJson = mapper.writeValueAsString(product);
+                    out.println(productJson);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    out.println("Product not found");
+                }
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.println("Product ID is required");
+            }
+        } else if (action.equals("category")) {
+            String categoryStr = request.getParameter("category");
+            if (categoryStr != null && !categoryStr.isEmpty()) {
+                List<Product> products = ProductDAO.getProductsByCategory(categoryStr);
+                if (!products.isEmpty()) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    String productsJson = mapper.writeValueAsString(products);
+                    out.println(productsJson);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    out.println("No products found for the specified category");
+                }
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.println("Category is required");
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.println("Invalid action");
+        }
+    }
+
 }

@@ -68,5 +68,77 @@ public class ProductDAO {
             return false;
         }
     }
+
+    public static Product getProductById(int productId) {
+        String query = "SELECT * FROM product WHERE id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, productId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setStockAmount(resultSet.getDouble("stockAmount"));
+                product.setDiscounts(resultSet.getDouble("discounts"));
+                product.setImages(resultSet.getString("images"));
+                return product;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static List<Product> getProductsByCategory(String category) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM product WHERE category = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, category);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setStockAmount(resultSet.getDouble("stockAmount"));
+                product.setDiscounts(resultSet.getDouble("discounts"));
+                product.setImages(resultSet.getString("images"));
+                product.setDescription(resultSet.getString("description"));
+                product.setCategory(resultSet.getString("category"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+
+    public static List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM product";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setStockAmount(resultSet.getDouble("stockAmount"));
+                product.setDiscounts(resultSet.getDouble("discounts"));
+                product.setImages(resultSet.getString("images"));
+                product.setDescription(resultSet.getString("description"));
+                product.setCategory(resultSet.getString("category"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 }
 
